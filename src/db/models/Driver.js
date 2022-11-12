@@ -1,23 +1,23 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class File extends Model {
+    class Driver extends Model {
         static associate(models) {
-            this.belongsTo(models.User, {
+            this.belongsTo(models.Location, {
                 targetKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'location_from',
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             });
-            this.belongsTo(models.Room, {
+            this.belongsTo(models.Location, {
                 targetKey: 'id',
-                foreignKey: 'room_id',
+                foreignKey: 'location_to',
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             });
         }
     }
-    File.init(
+    Driver.init(
         {
             id: {
                 allowNull: false,
@@ -25,27 +25,34 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            user_id: {
+            wa_nummber: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            departure_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            price: {
                 type: DataTypes.INTEGER,
+                allowNull: true
             },
-            room_id: {
-                type: DataTypes.UUID,
-            },
-            name: {
+            car_type: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
             },
-            extention: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            type: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            size: {
+            location_from: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
+            },
+            location_to: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
             },
             created_at: {
                 allowNull: false,
@@ -55,19 +62,15 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.DATE,
             },
-            deleted_at: {
-                allowNull: true,
-                type: DataTypes.DATE,
-            },
         },
         {
             sequelize,
-            tableName: 'file',
-            modelName: 'File',
+            tableName: 'driver',
+            modelName: 'Driver',
             timestamps: true,
             createdAt: 'created_at',
             updatedAt: 'updated_at',
         }
     );
-    return File;
+    return Driver;
 };

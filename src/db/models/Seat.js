@@ -1,29 +1,29 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
+    class Seat extends Model {
         static associate(models) {
-            this.hasMany(models.File, {foreignKey: "user_id"})
+            this.belongsTo(models.Driver, {
+                targetKey: 'id',
+                foreignKey: 'driver_id',
+                onDelete: 'SET NULL',
+                onUpdate: 'CASCADE',
+            });
         }
     }
-    User.init(
+    Seat.init(
         {
             id: {
                 allowNull: false,
-                autoIncrement: true,
                 primaryKey: true,
+                type: DataTypes.STRING,
+            },
+            driver_id: {
                 type: DataTypes.INTEGER,
-            },
-            email: {
-                type: DataTypes.STRING,
                 allowNull: false,
-                unique: true,
-                validate: {
-                    isEmail: true
-                }
             },
-            password: {
-                type: DataTypes.STRING,
+            is_avalaible: {
+                type: DataTypes.BOOLEAN,
                 allowNull: false,
             },
             created_at: {
@@ -33,16 +33,16 @@ module.exports = (sequelize, DataTypes) => {
             updated_at: {
                 allowNull: false,
                 type: DataTypes.DATE,
-            },
+            }
         },
         {
             sequelize,
-            tableName: 'user',
-            modelName: 'User',
+            tableName: 'seat',
+            modelName: 'Seat',
             timestamps: true,
-            createdAt: "created_at",
-            updatedAt: "updated_at"
+            createdAt: 'created_at',
+            updatedAt: 'updated_at',
         }
     );
-    return User;
+    return Seat;
 };
