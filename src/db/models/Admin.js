@@ -3,6 +3,9 @@ const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class Admin extends Model {
         static associate(models) {
+            this.hasMany(models.Order, {
+                foreignKey: 'admin_id',
+            });
         }
     }
     Admin.init(

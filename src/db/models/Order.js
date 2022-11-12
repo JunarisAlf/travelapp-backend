@@ -1,27 +1,12 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Location extends Model {
+    class Order extends Model {
         static associate(models) {
-            this.hasMany(models.Driver, {
-                as: 'driver_from',
-                foreignKey: 'location_from',
-            });
-            this.hasMany(models.Driver, {
-                as: 'driver_to',
-                foreignKey: 'location_to',
-            });
-            this.hasMany(models.Order, {
-                as: 'order_from',
-                foreignKey: 'from',
-            });
-            this.hasMany(models.Order, {
-                as: 'order_to',
-                foreignKey: 'destination',
-            });
+            
         }
     }
-    Location.init(
+    Order.init(
         {
             id: {
                 allowNull: false,
@@ -29,17 +14,33 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            kabupaten: {
+            admin_id: {
                 allowNull: false,
-                type: DataTypes.STRING,
+                type: DataTypes.INTEGER,
             },
-            kecamatan: {
+            driver_id: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
+            },
+            customer_name: {
                 type: DataTypes.STRING,
+                allowNull: false
+            },
+            destination: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            from: {
+                type: DataTypes.INTEGER,
+                allowNull: false
             },
             catatan: {
                 type: DataTypes.STRING,
-                allowNull: true,
+                allowNull: false
+            },
+            status: {
+                type: DataTypes.STRING,
+                allowNull: false
             },
             created_at: {
                 allowNull: false,
@@ -48,17 +49,16 @@ module.exports = (sequelize, DataTypes) => {
             updated_at: {
                 allowNull: false,
                 type: DataTypes.DATE,
-            },
+            }, 
         },
         {
-            indexes: [{name: 'kabupaten_kecamatan', fields: ['kabupaten', 'kecamatan']}],
             sequelize,
-            tableName: 'location',
-            modelName: 'Location',
+            tableName: 'order',
+            modelName: 'Order',
             timestamps: true,
             createdAt: 'created_at',
             updatedAt: 'updated_at',
         }
     );
-    return Location;
+    return Order;
 };

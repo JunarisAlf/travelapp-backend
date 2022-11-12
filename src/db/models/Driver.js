@@ -9,11 +9,15 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             });
+
             this.belongsTo(models.Location, {
                 targetKey: 'id',
                 foreignKey: 'location_to',
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
+            });
+            this.hasMany(models.Order, {
+                foreignKey: 'driver_id',
             });
         }
     }
