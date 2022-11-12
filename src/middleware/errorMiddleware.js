@@ -41,9 +41,9 @@ module.exports = (err, req, res, next) => {
         return res.status(code).json(response(code, false, message, null));
     }
     if (
-        err.name === 'EmailNotFound') {
+        err.name === 'UserNotFound') {
         code = 401;
-        message = 'Email not found';
+        message = 'User not found';
         return res.status(code).json(response(code, false, message, null));
     }
     if( err.name === 'WrongPassword' || err.name === 'EmailOrPasswordEmpty'){

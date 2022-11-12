@@ -10,10 +10,14 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            wa_nummber: {
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            wa_number: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true
+                unique: true,
             },
             password: {
                 type: Sequelize.STRING,
@@ -21,11 +25,11 @@ module.exports = {
             },
             departure_at: {
                 type: Sequelize.DATE,
-                allowNull: false
+                allowNull: true,
             },
             price: {
                 type: Sequelize.INTEGER,
-                allowNull: true
+                allowNull: true,
             },
             car_type: {
                 type: Sequelize.STRING,

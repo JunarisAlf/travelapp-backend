@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     class Driver extends Model {
         static associate(models) {
             this.belongsTo(models.Location, {
+                as: 'from',
                 targetKey: 'id',
                 foreignKey: 'location_from',
                 onDelete: 'SET NULL',
@@ -11,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             });
 
             this.belongsTo(models.Location, {
+                as: 'to',
                 targetKey: 'id',
                 foreignKey: 'location_to',
                 onDelete: 'SET NULL',
@@ -29,7 +31,11 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            wa_nummber: {
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            wa_number: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 unique: true
@@ -40,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             departure_at: {
                 type: DataTypes.DATE,
-                allowNull: false
+                allowNull: true
             },
             price: {
                 type: DataTypes.INTEGER,
