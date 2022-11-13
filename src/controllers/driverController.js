@@ -1,8 +1,30 @@
 const {Driver, Location} = require('../db/models');
 const response = require('../utils/response');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 module.exports = class driverController {
+    static async login(req, res, next){
+        const {wa_number,  password} = req.body;
+        try{
+            const driverRes = await Driver.findOne({where:{wa_number}})
+            if (driverRes == null) return next({name: 'UserNotFound'});
+            const validUser = await bcrypt.compare(password, driverRes.password);
+            if (validUser) {
+                const jwtToken = jwt.sign(
+                    {role: 'driver', id: driverRes.id, name: driverRes.name},
+                    process.env.JWT_SECRET
+                );
+                return res.status(200).json(
+                    response(200, true, 'Login Successfull', {token: jwtToken})
+                );
+            }
+            next({name: 'WrongPassword'});
+        }catch(err){
+            next(err)
+        }
+    }
     static async createDriver(req, res, next) {
         const {name, wa_number, password, car_type} = req.body;
         try {
