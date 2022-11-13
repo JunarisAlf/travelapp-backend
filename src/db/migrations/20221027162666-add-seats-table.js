@@ -9,13 +9,9 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.STRING,
             },
-            driver_id: {
-                type: Sequelize.INTEGER,
+            catatan: {
                 allowNull: false,
-            },
-            is_avalaible: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false,
+                type: Sequelize.STRING,
             },
             created_at: {
                 allowNull: false,
@@ -24,7 +20,7 @@ module.exports = {
             updated_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-            }
+            },
         });
     },
     async down(queryInterface, Sequelize) {

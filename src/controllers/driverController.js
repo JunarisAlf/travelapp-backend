@@ -1,28 +1,33 @@
-const {Driver, Location} = require('../db/models');
+const {Driver, Location, DriverSeat, Seat, sequelize} = require('../db/models');
 const response = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
 module.exports = class driverController {
-    static async login(req, res, next){
-        const {wa_number,  password} = req.body;
-        try{
-            const driverRes = await Driver.findOne({where:{wa_number}})
+    static async login(req, res, next) {
+        const {wa_number, password} = req.body;
+        try {
+            await Sequelize.trans;
+            const driverRes = await Driver.findOne({where: {wa_number}});
             if (driverRes == null) return next({name: 'UserNotFound'});
-            const validUser = await bcrypt.compare(password, driverRes.password);
+            const validUser = await bcrypt.compare(
+                password,
+                driverRes.password
+            );
             if (validUser) {
                 const jwtToken = jwt.sign(
                     {role: 'driver', id: driverRes.id, name: driverRes.name},
                     process.env.JWT_SECRET
                 );
                 return res.status(200).json(
-                    response(200, true, 'Login Successfull', {token: jwtToken})
+                    response(200, true, 'Login Successfull', {
+                        token: jwtToken,
+                    })
                 );
             }
             next({name: 'WrongPassword'});
-        }catch(err){
-            next(err)
+        } catch (err) {
+            next(err);
         }
     }
     static async createDriver(req, res, next) {
@@ -115,7 +120,12 @@ module.exports = class driverController {
     }
 
     static async getOneDriver(req, res, next) {
-        const driverID = req.params.driverID;
+        let driverID;
+        if (req.user.role == 'admin') {
+            driverID = req.params.driverID;
+        } else if (req.user.role == 'driver') {
+            driverID = req.user.id;
+        }
         try {
             const driverRes = await Driver.findOne({
                 where: {id: driverID},
@@ -132,6 +142,16 @@ module.exports = class driverController {
                         model: Location,
                         as: 'to',
                         attributes: ['id', 'kabupaten', 'kecamatan'],
+                        attributes: ['id', 'kabupaten', 'kecamatan'],
+                    },
+                    {
+                        model: DriverSeat,
+                        as: 'seats',
+                        attributes: ['id', 'status', 'seat_id'],
+                        include: {
+                            model: Seat,
+                            attributes: ['catatan'],
+                        },
                     },
                 ],
             });
@@ -190,4 +210,62 @@ module.exports = class driverController {
             next(err);
         }
     }
+    static async updateData(req, res, next) {
+        const driverID = req.user.id;
+        const {location_from, location_to, departure_at, price, seats} =
+            req.body;
+        try {
+            await sequelize.transaction(async (t) => {
+                await Driver.update(
+                    {
+                        location_from,
+                        location_to,
+                        departure_at,
+                        price,
+                    },
+                    {
+                        where: {id: driverID},
+                    },
+                    { transaction: t }
+                );
+                let updatePromise = [];
+                seats.forEach((seat) => {
+                    updatePromise.push(
+                        DriverSeat.update(
+                            {status: seat.status},
+                            {where: {id: seat.id}},
+                            { transaction: t }
+                        )
+                    );
+                });
+                await Promise.all(updatePromise);
+            });
+            res.status(200).json(response(200, true, "Berhasil update data"))
+        } catch (err) {
+            next(err);
+        }
+    }
+    // static async getData(req, res, next) {
+    //     const driverID = req.user.id;
+    //     try {
+    //         const driverRes = await Driver.findOne({
+    //             where: {id: driverID},
+    //             attributes: {
+    //                 exclude: ['password']
+    //             },
+    //             include: [
+    //                 {
+    //                     model: Location,
+    //                     as: 'from',
+    //                     attributes: ['id', 'kabupaten', 'kecamatan'],
+    //                 },
+    //                 {
+    //                     model: Location,
+    //                     as: 'to',
+    //                     attributes: ['id', 'kabupaten', 'kecamatan'],
+    //                 },
+    //             ],
+    //         });
+    //     } catch (err) {}
+    // }
 };

@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             });
+            this.hasMany(models.DriverSeat, {
+                as: 'seats',
+                foreignKey: 'driver_id',
+
+            })
             this.hasMany(models.Order, {
                 foreignKey: 'driver_id',
             });

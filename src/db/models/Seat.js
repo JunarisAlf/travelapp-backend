@@ -3,12 +3,7 @@ const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class Seat extends Model {
         static associate(models) {
-            this.belongsTo(models.Driver, {
-                targetKey: 'id',
-                foreignKey: 'driver_id',
-                onDelete: 'SET NULL',
-                onUpdate: 'CASCADE',
-            });
+           
         }
     }
     Seat.init(
@@ -18,13 +13,9 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.STRING,
             },
-            driver_id: {
-                type: DataTypes.INTEGER,
+            catatan: {
                 allowNull: false,
-            },
-            is_avalaible: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
+                type: DataTypes.STRING,
             },
             created_at: {
                 allowNull: false,
@@ -33,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             updated_at: {
                 allowNull: false,
                 type: DataTypes.DATE,
-            }
+            },
         },
         {
             sequelize,
