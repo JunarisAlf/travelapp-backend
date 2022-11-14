@@ -226,7 +226,7 @@ module.exports = class driverController {
                     {
                         where: {id: driverID},
                     },
-                    { transaction: t }
+                    {transaction: t}
                 );
                 let updatePromise = [];
                 seats.forEach((seat) => {
@@ -234,38 +234,64 @@ module.exports = class driverController {
                         DriverSeat.update(
                             {status: seat.status},
                             {where: {id: seat.id}},
-                            { transaction: t }
+                            {transaction: t}
                         )
                     );
                 });
                 await Promise.all(updatePromise);
             });
-            res.status(200).json(response(200, true, "Berhasil update data"))
+            res.status(200).json(response(200, true, 'Berhasil update data'));
         } catch (err) {
             next(err);
         }
     }
-    // static async getData(req, res, next) {
-    //     const driverID = req.user.id;
-    //     try {
-    //         const driverRes = await Driver.findOne({
-    //             where: {id: driverID},
-    //             attributes: {
-    //                 exclude: ['password']
-    //             },
-    //             include: [
-    //                 {
-    //                     model: Location,
-    //                     as: 'from',
-    //                     attributes: ['id', 'kabupaten', 'kecamatan'],
-    //                 },
-    //                 {
-    //                     model: Location,
-    //                     as: 'to',
-    //                     attributes: ['id', 'kabupaten', 'kecamatan'],
-    //                 },
-    //             ],
-    //         });
-    //     } catch (err) {}
-    // }
+
+    static async updateSeat(req, res, next) {
+        const seats = req.body.seats;
+        let driverID ;
+
+        if(req.user.role == 'admin'){
+            driverID = req.params.driverID
+        }else if(req.user.role == 'driver'){
+            driverID = req.user.id;
+        }
+        try {
+            await sequelize.transaction(async (t) => {
+                let updatePromise = [];
+                seats.forEach((seat) => {
+                    updatePromise.push(
+                        DriverSeat.update(
+                            {status: seat.status},
+                            {where: {id: seat.id, driver_id: driverID}},
+                            {transaction: t}
+                        )
+                    );
+                });
+                await Promise.all(updatePromise);
+            });
+            res.status(200).json(response(200, true, 'Berhasil update data'));
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    static async getDriverSeat(req, res, next) {
+        const driverID = req.params.driverID;
+        try {
+            const driverSeat = await DriverSeat.findAll({
+                where: {driver_id: driverID},
+                attributes: ['id', 'driver_id', 'seat_id', 'status']
+            });
+            res.status(200).json(
+                response(
+                    200,
+                    true,
+                    'Berhasil mendapatkan data seat',
+                    driverSeat
+                )
+            );
+        } catch (err) {
+            next(err);
+        }
+    }
 };

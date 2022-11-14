@@ -17,6 +17,8 @@ router.put('/driver/:driverID', driverController.updateDriver); //update driver
 router.delete('/driver/:driverID', driverController.deleteDriver); //delete driver
 router.get('/driver', driverController.getAllDriver); //get all driver
 router.get('/driver/:driverID', driverController.getOneDriver); //get one driver
+router.get('/driver-seat/:driverID', driverController.getDriverSeat); //get  driver seat
+router.put('/driver-seat/:driverID', driverController.updateSeat)
 
 // location
 router.post('/location', locationController.createLocation); //create location
