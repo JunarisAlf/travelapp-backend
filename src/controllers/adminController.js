@@ -67,4 +67,6 @@ module.exports = class adminController {
             next(err);
         }
     }
+
+    
 };

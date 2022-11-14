@@ -27,6 +27,10 @@ module.exports = {
                 type: Sequelize.DATE,
                 allowNull: true,
             },
+            departure: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
             price: {
                 type: Sequelize.INTEGER,
                 allowNull: true,

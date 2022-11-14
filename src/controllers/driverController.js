@@ -2,6 +2,8 @@ const {Driver, Location, DriverSeat, Seat, sequelize} = require('../db/models');
 const response = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { Op } = require("sequelize");
+
 
 module.exports = class driverController {
     static async login(req, res, next) {
@@ -292,6 +294,66 @@ module.exports = class driverController {
             );
         } catch (err) {
             next(err);
+        }
+    }
+
+    static async filterDriver(req, res, next){
+        const {name, from, to, time} = req.query
+        let driverRes;
+        try{
+            if(name){
+                driverRes = await Driver.findAll({
+                    where: {
+                        name: {
+                            [Op.like]: `%${name}%`
+                        }
+                    },
+                    attributes: {
+                        exclude: ['password', 'created_at', 'updated_at']
+                    },
+                    include: [
+                        {
+                            model: Location,
+                            as: 'from',
+                            attributes: ['id', 'kabupaten', 'kecamatan'],
+                        },
+                        {
+                            model: Location,
+                            as: 'to',
+                            attributes: ['id', 'kabupaten', 'kecamatan'],
+                        },
+                    ],
+                })
+                return res.status(200).json(response(200, true, "Berhasil mendapatkan data", driverRes))
+            }
+            if(from && to && time){
+                driverRes = await Driver.findAll({
+                    where: {
+                       location_from: from,
+                       location_to: to,
+                       departure: time 
+                    },
+                    attributes: {
+                        exclude: ['password', 'created_at', 'updated_at']
+                    },
+                    include: [
+                        {
+                            model: Location,
+                            as: 'from',
+                            attributes: ['id', 'kabupaten', 'kecamatan'],
+                        },
+                        {
+                            model: Location,
+                            as: 'to',
+                            attributes: ['id', 'kabupaten', 'kecamatan'],
+                        },
+                    ],
+                })
+                return res.status(200).json(response(200, true, "Berhasil mendapatkan data", driverRes))
+            }
+            
+        }catch(err){
+            next(err)
         }
     }
 };
