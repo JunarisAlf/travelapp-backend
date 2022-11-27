@@ -91,6 +91,7 @@ module.exports = class driverController {
             price,
             location_from,
             location_to,
+            departure
         } = req.body;
 
         try {
@@ -103,6 +104,7 @@ module.exports = class driverController {
                     price,
                     location_from,
                     location_to,
+                    departure
                 },
                 {
                     where: {id: driverID},
@@ -262,9 +264,14 @@ module.exports = class driverController {
                 let updatePromise = [];
                 seats.forEach((seat) => {
                     updatePromise.push(
-                        DriverSeat.update(
-                            {status: seat.status},
-                            {where: {id: seat.id, driver_id: driverID}},
+                        DriverSeat.upsert(
+                            {
+                                id: seat.id,
+                                status: seat.status,
+                                driver_id: driverID ,
+                                seat_id: seat.seat_id
+                            },
+                            // {where: {id: seat.id, driver_id: driverID}},
                             {transaction: t}
                         )
                     );
@@ -273,6 +280,7 @@ module.exports = class driverController {
             });
             res.status(200).json(response(200, true, 'Berhasil update data'));
         } catch (err) {
+            console.log(err)
             next(err);
         }
     }

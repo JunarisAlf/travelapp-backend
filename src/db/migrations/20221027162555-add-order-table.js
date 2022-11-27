@@ -18,7 +18,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            customer_name: {
+            customer: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
@@ -32,9 +32,9 @@ module.exports = {
             },
             catatan: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: true
             },
-            status: {
+            departure: {
                 type: Sequelize.STRING,
                 allowNull: false
             },

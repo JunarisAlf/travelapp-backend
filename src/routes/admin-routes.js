@@ -19,12 +19,16 @@ router.get('/driver', driverController.getAllDriver); //get all driver
 router.get('/driver/:driverID', driverController.getOneDriver); //get one driver
 router.get('/driver-seat/:driverID', driverController.getDriverSeat); //get  driver seat
 router.put('/driver-seat/:driverID', driverController.updateSeat)
+router.get('/filter', driverController.filterDriver); //filter  driver seat
+
 
 // location
 router.post('/location', locationController.createLocation); //create location
 router.put('/location/:locID', locationController.updateLocation); //Update location
-
+router.get('/location/search', locationController.searchLoc); //getOne location
 router.get('/location', locationController.getAllLocation); //getAll location
+router.get('/location/:locID', locationController.getOneLocation); //getAll location
+
 router.delete('/location/:locID', locationController.deleteLocation); //delete location
 
 module.exports = router;

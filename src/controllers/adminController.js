@@ -16,7 +16,7 @@ module.exports = class adminController {
                     process.env.JWT_SECRET
                 );
                 return res.status(200).json(
-                    response(200, true, 'Login Successfull', {token: jwtToken})
+                    response(200, true, 'Login Successfull', {token: jwtToken, user: username, role: 'admin', id: adminRes.id})
                 );
             }
             next({name: 'WrongPassword'});
