@@ -20,7 +20,9 @@ module.exports = class locationController {
     }
     static async getAllLocation(req, res, next) {
         try {
-            const locRes = await Location.findAll();
+            const locRes = await Location.findAll({
+                order: [['updated_at', 'DESC']]
+            });
             res.status(200).json(
                 response(
                     200,
@@ -64,7 +66,9 @@ module.exports = class locationController {
                             }
                         }
                     ]
-                }
+                },
+                order: [['updated_at', 'DESC']]
+
             })
             res.status(200).json(
                 response(200, true, 'Berhasil mendapatkan data lokasi', locRes)

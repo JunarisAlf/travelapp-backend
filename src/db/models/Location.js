@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'driver_to',
                 foreignKey: 'location_to',
             });
-            this.hasMany(models.Order, {
-                as: 'order_from',
-                foreignKey: 'from',
-            });
-            this.hasMany(models.Order, {
-                as: 'order_to',
-                foreignKey: 'destination',
-            });
+            // this.hasMany(models.Order, {
+            //     as: 'order_from',
+            //     foreignKey: 'from',
+            // });
+            // this.hasMany(models.Order, {
+            //     as: 'order_to',
+            //     foreignKey: 'destination',
+            // });
         }
     }
     Location.init(

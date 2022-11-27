@@ -2,6 +2,7 @@ const router = require('express').Router();
 const adminController = require('../controllers/adminController');
 const driverController = require('../controllers/driverController');
 const locationController = require('../controllers/locationController');
+const orderController = require('../controllers/orderController');
 
 const adminMiddleware = require('../middleware/adminMiddleware');
 
@@ -28,7 +29,14 @@ router.put('/location/:locID', locationController.updateLocation); //Update loca
 router.get('/location/search', locationController.searchLoc); //getOne location
 router.get('/location', locationController.getAllLocation); //getAll location
 router.get('/location/:locID', locationController.getOneLocation); //getAll location
-
 router.delete('/location/:locID', locationController.deleteLocation); //delete location
 
+// Order
+router.post('/order', orderController.create); //create order
+router.put('/order/:orderID', orderController.update); //create order
+router.get('/order', orderController.getAll); //create order
+router.get('/order/:orderID', orderController.getOne); //create order
+
+
 module.exports = router;
+// 

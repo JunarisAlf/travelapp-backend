@@ -189,6 +189,8 @@ module.exports = class driverController {
                         attributes: ['id', 'kabupaten', 'kecamatan'],
                     },
                 ],
+                order: [['updated_at', 'DESC']]
+
             });
             res.status(200).json(
                 response(
@@ -331,6 +333,8 @@ module.exports = class driverController {
                             attributes: ['id', 'kabupaten', 'kecamatan'],
                         },
                     ],
+                    order: [['updated_at', 'DESC']]
+
                 })
                 return res.status(200).json(response(200, true, "Berhasil mendapatkan data", driverRes))
             }
@@ -356,6 +360,8 @@ module.exports = class driverController {
                             attributes: ['id', 'kabupaten', 'kecamatan'],
                         },
                     ],
+                    order: [['updated_at', 'DESC']]
+
                 })
                 return res.status(200).json(response(200, true, "Berhasil mendapatkan data", driverRes))
             }
