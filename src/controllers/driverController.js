@@ -9,7 +9,6 @@ module.exports = class driverController {
     static async login(req, res, next) {
         const {wa_number, password} = req.body;
         try {
-            await Sequelize.trans;
             const driverRes = await Driver.findOne({where: {wa_number}});
             if (driverRes == null) return next({name: 'UserNotFound'});
             const validUser = await bcrypt.compare(
@@ -18,16 +17,18 @@ module.exports = class driverController {
             );
             if (validUser) {
                 const jwtToken = jwt.sign(
-                    {role: 'driver', id: driverRes.id, name: driverRes.name},
+                    {role: 'driver', id: driverRes.id, name: driverRes.name, role: 'driver'},
                     process.env.JWT_SECRET
                 );
                 return res.status(200).json(
                     response(200, true, 'Login Successfull', {
                         token: jwtToken,
+                        id: driverRes.id,
+                        role: 'driver'
                     })
                 );
             }
-            next({name: 'WrongPassword'});
+            throw ({name: 'WrongPassword'});
         } catch (err) {
             next(err);
         }
@@ -218,7 +219,7 @@ module.exports = class driverController {
     }
     static async updateData(req, res, next) {
         const driverID = req.user.id;
-        const {location_from, location_to, departure_at, price, seats} =
+        const {location_from, location_to, departure_at, price, seats, car_type, departure} =
             req.body;
         try {
             await sequelize.transaction(async (t) => {
@@ -227,7 +228,7 @@ module.exports = class driverController {
                         location_from,
                         location_to,
                         departure_at,
-                        price,
+                        price, car_type, departure
                     },
                     {
                         where: {id: driverID},
@@ -315,7 +316,7 @@ module.exports = class driverController {
                 driverRes = await Driver.findAll({
                     where: {
                         name: {
-                            [Op.like]: `%${name}%`
+                            [Op.iLike]: `%${name}%`
                         }
                     },
                     attributes: {

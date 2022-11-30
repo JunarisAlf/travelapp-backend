@@ -57,12 +57,12 @@ module.exports = class locationController {
                     [Op.or]: [
                         {
                             kabupaten: {
-                                [Op.like]: `%${name}%`,
+                                [Op.iLike]: `%${name}%`,
                             }
                         },
                         {
                             kecamatan: {
-                                [Op.like]: `%${name}%`,
+                                [Op.iLike]: `%${name}%`,
                             }
                         }
                     ]

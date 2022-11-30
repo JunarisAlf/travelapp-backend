@@ -33,9 +33,12 @@ router.delete('/location/:locID', locationController.deleteLocation); //delete l
 
 // Order
 router.post('/order', orderController.create); //create order
+
 router.put('/order/:orderID', orderController.update); //create order
 router.get('/order', orderController.getAll); //create order
+router.get('/order/search', orderController.search); //search order
 router.get('/order/:orderID', orderController.getOne); //create order
+
 
 
 module.exports = router;
