@@ -5,7 +5,7 @@ const router = require('./src/routes');
 const cors = require('cors');
 
 app.use(cors({
-    origin: 'http://localhost:3001'
+    origin: 'https://travelapp-iabr.onrender.com'
 }));
 
 app.use(express.urlencoded({ extended: false }));
